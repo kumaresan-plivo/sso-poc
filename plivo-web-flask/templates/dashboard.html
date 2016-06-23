@@ -4,5 +4,11 @@
     <h4>Hello {{ username }}</h4>
     <p>Do you want to <a href="{{ url_for('logout') }}">log out?</a>
     <p>Or quickly get a <a href="{{ url_for('resource') ~ '?username=' ~ username }}"> resource with cached token check?</a>
-    <p>Or run a <a href="{{ url_for('complex_op') }}">long running op with remote token check?</a>
+    <p>
+    <form method="post" action="{{ url_for('complex_op') }}">
+        <input type="checkbox" name="use_rt_flow" value="True" />Use refresh token flow<br>
+        Or run a long running op with remote token check?
+        <input type="submit" value="Go" />
+        <input type="hidden" name="username" value="{{ username }}" />
+    </form>
 {% endblock %}

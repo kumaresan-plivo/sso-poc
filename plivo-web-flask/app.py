@@ -1,5 +1,4 @@
-from flask import Flask, request, Response, make_response, url_for, render_template, redirect, flash
-import jwt
+from flask import Flask, request, make_response, url_for, render_template, redirect, flash
 import redis
 import requests
 
@@ -55,25 +54,10 @@ def login():
 
 @app.route('/resource', methods=['POST', 'GET'])
 def resource():
-    # quickly validate cached AT and return resource
     access_token = request.cookies.get('token')
-    # 1. check if AT hasn't expired and AT username equals cache username
-    username_at = cache.hmget(access_token, 'username')[0]
-    username_at = username_at.decode('utf-8')
-    username_rt = request.values.get("username")
-    if username_at == username_rt:
-        # 2. decode token(checks signature) and check issuer
-        decoded_token = jwt.decode(access_token, STORMPATH_API_SECRET, algorithms=['HS256'])
-        print(decoded_token)
-        issuer = decoded_token['iss']
-        if issuer == STORMPATH_APP_BASE_URL:
-            return Response('YASSS')
-        else:
-            print("We've dun goofed!", issuer, STORMPATH_APP_BASE_URL)
-            return Response('NAHIIIIIIIIIII')
-    else:
-        print("We've dun goofed!", username_rt, username_at)
-        return Response('NAHIIIIIIIIIII')
+    res_url = 'http://localhost:3000/resource?username=%s'
+    response = requests.get(str.format(res_url % request.values.get('username')), headers={'Authorization': access_token})
+    return make_response(response.text)
 
 
 @app.route('/complex_op', methods=['POST', 'GET'])
@@ -81,7 +65,9 @@ def complex_op():
     access_token = request.cookies.get('token')
 
     token_header = str.format('Bearer %s' % access_token)
-    response = requests.post('http://localhost:3000/complex_op', headers={'Authorization': token_header})
+    response = requests.post('http://localhost:3000/complex_op',
+                             data={'use_rt_flow': request.form['use_rt_flow'], 'username': request.form['username']},
+                             headers={'Authorization': token_header})
     print(response.text)
 
     # reset the token if we obtain a new one in case of AT expiry
