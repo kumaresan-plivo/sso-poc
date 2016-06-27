@@ -9,6 +9,7 @@ Contains three parts:
 * **idp**: Identity provider in Django and OAuth toolkit
 * **plivo-web**: Flask web app serving minimal login/dashboard pages
 * **plivo-service**: Flask service to simulate a long running service op
+* Also uses local redis instance for cache
 
 Pros and Cons
 -------------
