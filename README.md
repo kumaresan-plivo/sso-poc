@@ -17,17 +17,17 @@ Pros and Cons
 | Topic | Stormpath | Django SSO |
 | ----- | -------- | ---------- |
 | Authentication support | Works | Works, except no JWT by default |
-| Authorization support | Only by extending customData and creating directories/groups. This means one atleast extra API call at login to search the user and custom data | No support OOTB. Needs trivial changes to add user level scopes, more changes to add application level scopes. But no extra API call needed for returning scopes |
-| Registration | Provides registration APIs including email/password recovery | Need add registration/other APIs(or just use registration package to host the entire flow) |
+| Authorization support | Only by extending customData and creating directories/groups. This means atleast one extra API call at login to search the user and custom data | No support OOTB. Needs trivial changes to add user level scopes, more changes to add application level scopes. But no extra API call needed for returning scopes |
+| Registration | Provides registration APIs including email/password recovery | Need to add registration/related APIs(or just use registration package to host the entire flow) |
 
 
 Other take-aways
 ----------------
 
-* In both approaches, it's up to the app to check if the given user/token has access to functionality.
+* In both approaches, it's up to the app to check if the given user/token has access to required functionality.
 * Need to write decorators/common-utils for permission checks, cache token validation and RT flow in either case.
 * Django OAuth toolkit doesn't issue JWT. So the tokens we send to front-end must have restricted scopes and should always be validated
-* There are probably some caching gotchas involved in either case. Like actual tokens expiring before cache expires. Also need to decide if we have to use user Id as key or something else.
+* There are probably some caching gotchas involved in either case. Like actual tokens expiring before cache expires. Also need to decide if we have to use user Id as key or something else. This demo uses AT as key which is not ideal if AT length is too big for Redis.
 
 
 Changes in oauth-provider
