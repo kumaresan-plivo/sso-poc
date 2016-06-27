@@ -13,7 +13,8 @@ Contains three parts:
 Pros and Cons
 -------------
 
-|| Stormpath | Django SSO |
+| Topic | Stormpath | Django SSO |
+| ----- | -------- | ---------- |
 | Authentication support | Works | Works, except no JWT by default |
 | Authorization support | Only by extending customData and creating directories/groups. This means one atleast extra API call at login to search the user and custom data | No support OOTB. Needs trivial changes to add user level scopes, more changes to add application level scopes. But no extra API call needed for returning scopes |
 | Registration | Provides registration APIs including email/password recovery | Need add registration/other APIs(or just use registration package to host the entire flow) |
